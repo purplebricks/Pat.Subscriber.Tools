@@ -1,0 +1,62 @@
+﻿using System;
+using Microsoft.Extensions.CommandLineUtils;
+using PB.ITOps.Messaging.PatLite.Tools.ApiClients;
+using PB.ITOps.Messaging.PatLite.Tools.Commands;
+
+namespace PB.ITOps.Messaging.PatLite.Tools
+{
+    internal static class Program
+    {
+        private static int Main(string[] args)
+        {
+            var app = new CommandLineApplication(false)
+            {
+                Name = "pat"
+            };
+
+            app.HelpOption("-?|-h|--help");
+
+            var client = new AzureHttpClient();
+            var patConfigurationService = BuildConfigurationService(client);
+
+            app.Command("create", new CreateCommand(patConfigurationService).Register);
+            app.Command("delete", new DeleteCommand(patConfigurationService).Register);
+            app.Command("logout", new LogoutCommand(client).Register);
+
+            app.OnExecute(() => {
+                app.ShowHelp();
+                return 0;
+            });
+
+            try
+            {
+                return app.Execute(args);
+            }
+            catch (CommandParsingException commandParsingException)
+            {
+                commandParsingException.Command.ShowHelp();
+                return -1;
+            }
+            catch (AuthenticationFailureException)
+            {
+                Console.Error.WriteError("Error: Failed to authenticate with Azure AD");
+                return -1;
+            }
+            catch (UnexpectedResponseException unexpectedResponseException)
+            {
+                Console.Error.WriteError($"Error: Unexpected response: {unexpectedResponseException.Message}");
+                return -1;
+            }
+        }
+
+        private static PatBootstrapService BuildConfigurationService(AzureHttpClient client)
+        {
+            return new PatBootstrapService(
+                client,
+                new AzureSubscriptionApiClient(client), 
+                new NamespaceApiClient(client), 
+                new SubscriptionApiClient(client),
+                new TopicApiClient(client));
+        }
+    }
+}
