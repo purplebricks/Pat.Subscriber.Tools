@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PB.ITOps.Messaging.PatLite.Tools": {
+      "commandName": "Project",
+      "commandLineArgs": "delete -n mailmachinegun-ns -s rob -t robtopic -d"
+    }
+  }
+}
