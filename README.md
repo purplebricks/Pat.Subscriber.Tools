@@ -16,5 +16,8 @@ To install the dotnet tooling into a project add the following to a projects `.c
 
 Navigate your terminal to the folder with the project you have installed the patlite tooling. Then run `donet restore`. At this point you are able to run `dotnet pat`. The pat tooling has a built in help which should help you run the tool.
 
+### Example Use
+`dotnet pat create -c "Endpoint=sb://mailmachinegun-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=XXXXXXXXXXXXXXXXX=" -s "MySubscriber" -t "pat" -d`
+
 ## Authentication
 This tool requires authentication into your azure subscription. To make this flow more straightforward your authentication tokens are encrypted and stored in the file `%APPDATA%\PatLite\Tokencache.dat`. If you do not wish for your credentials to be stored you can either delete the file once the tool has run or you can run `dotnet pat logout`
