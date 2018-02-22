@@ -20,7 +20,8 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             var patConfigurationService = BuildConfigurationService(client);
 
             app.Command("create", new CreateCommand(patConfigurationService).Register);
-            app.Command("delete", new DeleteCommand(patConfigurationService).Register);
+            app.Command("deleteSubscription", new DeleteSubscriptionCommand(patConfigurationService).Register);
+            app.Command("deleteTopic", new DeleteTopicCommand(patConfigurationService).Register);
             app.Command("logout", new LogoutCommand(client).Register);
 
             app.OnExecute(() => {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using PB.ITOps.Messaging.PatLite.Tools.Commands;
+using System;
 using System.Threading.Tasks;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
 
 namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
 {
@@ -25,8 +25,19 @@ namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
                 }
             };
 
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, configCommand.Namespace, configCommand.EffectiveTopicName, configCommand.Subscription);
+            var path = BuildPath(configCommand, azureSubscriptionId);
             await _azureHttpClient.Put(new Uri(path, UriKind.Relative), payload);
+        }
+
+        public async Task DeleteSubscription(PatConfigCommand configCommand, string azureSubscriptionId)
+        {
+            var path = BuildPath(configCommand, azureSubscriptionId);
+            await _azureHttpClient.Delete(new Uri(path, UriKind.Relative));
+        }
+
+        private static string BuildPath(PatConfigCommand configCommand, string azureSubscriptionId)
+        {
+            return ApiRouteBuilder.Build(azureSubscriptionId, configCommand.Namespace, configCommand.EffectiveTopicName, configCommand.Subscription);
         }
     }
 }

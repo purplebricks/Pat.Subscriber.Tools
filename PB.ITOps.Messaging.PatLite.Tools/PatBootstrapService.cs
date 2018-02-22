@@ -1,8 +1,8 @@
-﻿using System;
+﻿using PB.ITOps.Messaging.PatLite.Tools.ApiClients;
+using PB.ITOps.Messaging.PatLite.Tools.Commands;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using PB.ITOps.Messaging.PatLite.Tools.ApiClients;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
 
 namespace PB.ITOps.Messaging.PatLite.Tools
 {
@@ -16,7 +16,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools
 
         public PatBootstrapService(
             AzureHttpClient azureHttpClient,
-            AzureSubscriptionApiClient azureSubscriptionApiClient, 
+            AzureSubscriptionApiClient azureSubscriptionApiClient,
             NamespaceApiClient namespaceApiClient,
             SubscriptionApiClient subscriptionApiClient,
             TopicApiClient topicApiClient)
@@ -52,7 +52,23 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             _azureHttpClient.SetServicePrincipal(configCommand.ClientId, configCommand.ClientSecret, configCommand.TenantId);
         }
 
-        public async Task<int> Delete(PatConfigCommand configCommand)
+        public async Task<int> DeleteSubscription(PatConfigCommand configCommand)
+        {
+            ConfigureAuth(configCommand);
+
+            var azureSubscriptionId = await GetAzureSubscriptionFor(configCommand);
+            if (string.IsNullOrEmpty(azureSubscriptionId))
+            {
+                return -1;
+            }
+
+            await _subscriptionApiClient.DeleteSubscription(configCommand, azureSubscriptionId);
+
+            Console.WriteLine($"delete complete {configCommand.Namespace} {configCommand.EffectiveTopicName}\\{configCommand.Subscription}");
+            return 0;
+        }
+
+        public async Task<int> DeleteTopic(PatConfigCommand configCommand)
         {
             ConfigureAuth(configCommand);
 

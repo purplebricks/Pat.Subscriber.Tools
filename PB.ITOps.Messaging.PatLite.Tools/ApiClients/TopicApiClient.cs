@@ -1,7 +1,7 @@
-﻿using System;
+﻿using PB.ITOps.Messaging.PatLite.Tools.Commands;
+using System;
 using System.Net;
 using System.Threading.Tasks;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
 
 namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
 {
