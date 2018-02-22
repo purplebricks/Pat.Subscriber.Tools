@@ -49,7 +49,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools
 
         private void ConfigureAuth(PatConfigCommand configCommand)
         {
-            _azureHttpClient.SetServicePrincipal(configCommand.ClientId, configCommand.ClientSecret);
+            _azureHttpClient.SetServicePrincipal(configCommand.ClientId, configCommand.ClientSecret, configCommand.TenantId);
         }
 
         public async Task<int> Delete(PatConfigCommand configCommand)

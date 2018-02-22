@@ -15,6 +15,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
         private CommandOption _devSetting;
         private CommandOption _clientId;
         private CommandOption _clientSecret;
+        private CommandOption _tenantId;
         private CommandParser _commandParser;
 
         protected BaseCommand(string command, string description)
@@ -32,8 +33,9 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
             _devSetting = app.Option("-d|--dev", "use local dev topic (defaults to false)", CommandOptionType.NoValue);
             _clientId = app.Option("-ci|--clientId", "Client Id, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
             _clientSecret = app.Option("-cs|--clientSecret", "Client secret, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
+            _tenantId = app.Option("-ti|--tenantId", "Tenant Id (optional).", CommandOptionType.SingleValue);
 
-            _commandParser = new CommandParser(_connectionString, _namespace, _subscriptionSetting, _topicSetting, _devSetting, _clientId, _clientSecret);
+            _commandParser = new CommandParser(_connectionString, _namespace, _subscriptionSetting, _topicSetting, _devSetting, _clientId, _clientSecret, _tenantId);
 
             app.Description = _description;
 

@@ -11,5 +11,6 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
         public string EffectiveTopicName => (UseDevelopmentTopic ? Topic + Environment.GetEnvironmentVariable("COMPUTERNAME") : Topic).ToLower();
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
+        public string TenantId { get; set; }
     }
 }

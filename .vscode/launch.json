@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/PB.ITOps.Messaging.PatLite.Tools/bin/Debug/netcoreapp2.0/dotnet-pat.dll",
-            "args": ["create", "-n", "mailmachinegun-ns", "-s", "TestSubscription", "-t", "TestTopic", "-d"],
+            "args": ["create", "-n", "mailmachinegun-ns", "-s", "TestSubscription", "-t", "TestTopic", "-d", "-ci", "f44002f7-3843-453f-909e-efca3270ab6c", "-cs", "correct horse battery staple", "-ti", "6965c8e5-c907-4361-905f-bba34a3b442a"],
             "cwd": "${workspaceFolder}/PB.ITOps.Messaging.PatLite.Tools",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",
