@@ -24,7 +24,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
                 return true;
             }
 
-            if (response == HttpStatusCode.NotFound)
+            if (response == HttpStatusCode.NotFound || response == HttpStatusCode.Forbidden)
             {
                 return false;
             }

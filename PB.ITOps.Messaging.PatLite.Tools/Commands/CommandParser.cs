@@ -16,9 +16,10 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
         private readonly CommandOption _devSetting;
         private readonly CommandOption _clientId;
         private readonly CommandOption _clientSecret;
+        private readonly CommandOption _tenantId;
         private static readonly Regex ServiceBusEntityName = new Regex(@"^[\w-\.\$]{1,50}/?$", RegexOptions.Compiled | RegexOptions.ECMAScript);
 
-        public CommandParser(CommandOption connectionString, CommandOption ns, CommandOption subscriptionSetting, CommandOption topicSetting, CommandOption devSetting, CommandOption clientId, CommandOption clientSecret)
+        public CommandParser(CommandOption connectionString, CommandOption ns, CommandOption subscriptionSetting, CommandOption topicSetting, CommandOption devSetting, CommandOption clientId, CommandOption clientSecret, CommandOption tenantId)
         {
             _connectionString = connectionString;
             _namespace = ns;
@@ -27,6 +28,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
             _devSetting = devSetting;
             _clientId = clientId;
             _clientSecret = clientSecret;
+            _tenantId = tenantId;
         }
 
         public PatConfigCommand GetConfig()
@@ -49,7 +51,8 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
                 Topic = GetTopic().Topic,
                 UseDevelopmentTopic = _devSetting.HasValue(),
                 ClientId = GetAuthentication().ClientId,
-                ClientSecret = GetAuthentication().ClientSecret
+                ClientSecret = GetAuthentication().ClientSecret,
+                TenantId = GetAuthentication().TenantId
             };
         }
 
@@ -108,14 +111,14 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
             return ($"One of --{_namespace.LongName} or --{_connectionString.LongName} must be provided.", null);
         }
 
-        private (string Error, string ClientId, string ClientSecret) GetAuthentication()
+        private (string Error, string ClientId, string ClientSecret, string TenantId) GetAuthentication()
         {
             if (_clientId.HasValue() && !_clientSecret.HasValue()
                 || !_clientId.HasValue() && _clientSecret.HasValue())
             {
-                return ($"--{_clientId.LongName} and --{_clientSecret.LongName} must be provided together", null, null);
+                return ($"--{_clientId.LongName} and --{_clientSecret.LongName} must be provided together", null, null, null);
             }
-            return (null, _clientId.Value(), _clientSecret.Value());
+            return (null, _clientId.Value(), _clientSecret.Value(), _tenantId.Value());
         }
 
         private (string Error, string Subscription) GetSubscription()

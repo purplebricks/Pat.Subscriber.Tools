@@ -21,6 +21,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools
         private readonly HttpClient _client;
         private string _clientId;
         private string _clientSecret;
+        private string _tenantId;
         private readonly FileTokenCache _tokenCache;
 
         static AzureHttpClient()
@@ -109,9 +110,12 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             {
                 var handler = new JwtSecurityTokenHandler();
                 var token = (JwtSecurityToken)handler.ReadToken(_tokenValue);
-                var name = token.Claims.Single(c => c.Type == "name");
-                var upn = token.Claims.Single(c => c.Type == "upn");
-                return $"{name.Value} <{upn.Value}>";
+                var name = token.Claims.SingleOrDefault(c => c.Type == "name");
+                var upn = token.Claims.SingleOrDefault(c => c.Type == "upn");
+                var appId = token.Claims.SingleOrDefault(c => c.Type == "appid");
+                return string.IsNullOrEmpty($"{appId.Value}") 
+                    ? $"{name.Value} <{upn.Value}>"
+                    : $"{appId.Value}";
             }
         }
 
@@ -122,11 +126,13 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             if (_tokenExpiresAtUtc < DateTime.UtcNow.AddMinutes(-2))
             {
                 var context = new AuthenticationContext("https://login.microsoftonline.com/common", _tokenCache);
+                string tenantFromToken = null;
                 if (context.TokenCache.Count > 0)
                 {
-                    var homeTenant = context.TokenCache.ReadItems().First().TenantId;
-                    context = new AuthenticationContext("https://login.microsoftonline.com/" + homeTenant, _tokenCache);
+                    tenantFromToken = context.TokenCache.ReadItems().First().TenantId;
                 }
+                var tenant = tenantFromToken ?? _tenantId ?? "common";
+                context = new AuthenticationContext("https://login.microsoftonline.com/" + tenant, _tokenCache);
 
                 AuthenticationResult result;
                 if (!string.IsNullOrEmpty(_clientId) && !string.IsNullOrEmpty(_clientSecret))
@@ -166,10 +172,11 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             }
         }
 
-        public void SetServicePrincipal(string configCommandClientId, string configCommandClientSecret)
+        public void SetServicePrincipal(string configCommandClientId, string configCommandClientSecret, string tenantId)
         {
             _clientId = configCommandClientId;
             _clientSecret = configCommandClientSecret;
+            _tenantId = tenantId;
         }
     }
 }
