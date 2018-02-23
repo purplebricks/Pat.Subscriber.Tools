@@ -2,7 +2,9 @@
   "profiles": {
     "PB.ITOps.Messaging.PatLite.Tools": {
       "commandName": "Project",
-      "commandLineArgs": "delete -n mailmachinegun-ns -s rob -t robtopic -d"
+      //"commandLineArgs": "create -n mailmachinegun-ns -s KaderTestSubscription -t KaderTestTopic -d -ci f44002f7-3843-453f-909e-efca3270ab6c -cs \"correct horse battery staple\" -ti  6965c8e5-c907-4361-905f-bba34a3b442a"
+      "commandLineArgs": "deleteTopic -n mailmachinegun-ns -s KaderTestSubscription -t KaderTestTopic -d -ci f44002f7-3843-453f-909e-efca3270ab6c -cs \"correct horse battery staple\" -ti  6965c8e5-c907-4361-905f-bba34a3b442a"
+      //"commandLineArgs": "deleteSubscription -n mailmachinegun-ns -s KaderTestSubscription -t KaderTestTopic -d -ci f44002f7-3843-453f-909e-efca3270ab6c -cs \"correct horse battery staple\" -ti  6965c8e5-c907-4361-905f-bba34a3b442a"
     }
   }
 }
