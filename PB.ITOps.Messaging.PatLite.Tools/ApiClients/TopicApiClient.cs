@@ -14,9 +14,9 @@ namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
             _azureHttpClient = azureHttpClient;
         }
 
-        public async Task CreateTopic(PatConfigCommand configCommand, string azureSubscriptionId)
+        public async Task CreateTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
         {
-            if (await TopicExists(configCommand, azureSubscriptionId))
+            if (await TopicExists(configCommand, resouceGroupName, azureSubscriptionId))
             {
                 return;
             }
@@ -30,24 +30,24 @@ namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
                 }
             };
 
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             await _azureHttpClient.Put(new Uri(path, UriKind.Relative), payload);
         }
 
-        public async Task DeleteTopic(PatConfigCommand configCommand, string azureSubscriptionId)
+        public async Task DeleteTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
         {
-            if (!await TopicExists(configCommand, azureSubscriptionId))
+            if (!await TopicExists(configCommand, azureSubscriptionId, resouceGroupName))
             {
                 return;
             }
 
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             await _azureHttpClient.Delete(new Uri(path, UriKind.Relative));
         }
 
-        private async Task<bool> TopicExists(PatConfigCommand configCommand, string azureSubscriptionId)
+        private async Task<bool> TopicExists(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
         {
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             var result = await _azureHttpClient.GetStatusCode(new Uri(path, UriKind.Relative));
 
             if (result == HttpStatusCode.OK)

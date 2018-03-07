@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
 
 namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
 {
@@ -26,7 +26,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
             };
 
             var response = await _azureHttpClient.Get(new Uri("?api-version=2017-08-01", UriKind.Relative), responseTemplate);
-            var subscriptions = response.value.Select(x => x.subscriptionId);
+            var subscriptions = response.ResponsePayload.value.Select(x => x.subscriptionId);
             if (!subscriptions.Any())
             {
                 Console.Error.WriteError($"Error: No azure subscriptions were found for the user {_azureHttpClient.AuthUser}");

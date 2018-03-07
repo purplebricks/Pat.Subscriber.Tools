@@ -49,6 +49,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
                     app.ShowHelp(_command);
                     return -1;
                 }
+
                 try
                 {
                     return await Command(commandConfig);
@@ -58,7 +59,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools.Commands
                     Console.Error.WriteError(aggExc.Flatten().Message);
                     return -1;
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     Console.Error.WriteError(exc.Message);
                     return -1;

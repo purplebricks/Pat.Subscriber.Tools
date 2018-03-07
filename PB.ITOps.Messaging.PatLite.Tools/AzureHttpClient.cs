@@ -65,7 +65,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools
             result.EnsureSuccessStatusCode();
         }
 
-        public async Task<T> Get<T>(Uri path, T responseTemplate)
+        public async Task<(T ResponsePayload, HttpStatusCode Status)> Get<T>(Uri path, T responseTemplate)
         {
             var result = await Get(path);
 
@@ -73,7 +73,7 @@ namespace PB.ITOps.Messaging.PatLite.Tools
 
             var responsePayload = await result.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeAnonymousType(responsePayload, responseTemplate);
+            return (JsonConvert.DeserializeAnonymousType(responsePayload, responseTemplate), result.StatusCode);
         }
 
         private async Task<HttpResponseMessage> Get(Uri uri)

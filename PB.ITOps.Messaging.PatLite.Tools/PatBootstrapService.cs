@@ -32,15 +32,15 @@ namespace PB.ITOps.Messaging.PatLite.Tools
         {
             ConfigureAuth(configCommand);
 
-            var azureSubscriptionId = await GetAzureSubscriptionFor(configCommand);
-            if (string.IsNullOrEmpty(azureSubscriptionId))
+            (var azureSubscriptionId, var resourceGroup) = await GetAzureSubscriptionFor(configCommand);
+            if (string.IsNullOrEmpty(azureSubscriptionId) || string.IsNullOrEmpty(resourceGroup))
             {
                 return -1;
             }
 
-            await _topicApiClient.CreateTopic(configCommand, azureSubscriptionId);
+            await _topicApiClient.CreateTopic(configCommand, azureSubscriptionId, resourceGroup);
 
-            await _subscriptionApiClient.CreateSubscription(configCommand, azureSubscriptionId);
+            await _subscriptionApiClient.CreateSubscription(configCommand, azureSubscriptionId, resourceGroup);
 
             Console.WriteLine($"create complete {configCommand.Namespace} {configCommand.EffectiveTopicName}\\{configCommand.Subscription}");
 
@@ -56,13 +56,13 @@ namespace PB.ITOps.Messaging.PatLite.Tools
         {
             ConfigureAuth(configCommand);
 
-            var azureSubscriptionId = await GetAzureSubscriptionFor(configCommand);
-            if (string.IsNullOrEmpty(azureSubscriptionId))
+            (var azureSubscriptionId, var resourceGroup) = await GetAzureSubscriptionFor(configCommand);
+            if (string.IsNullOrEmpty(azureSubscriptionId) || string.IsNullOrEmpty(resourceGroup))
             {
                 return -1;
             }
 
-            await _subscriptionApiClient.DeleteSubscription(configCommand, azureSubscriptionId);
+            await _subscriptionApiClient.DeleteSubscription(configCommand, azureSubscriptionId, resourceGroup);
 
             Console.WriteLine($"delete complete {configCommand.Namespace} {configCommand.EffectiveTopicName}\\{configCommand.Subscription}");
             return 0;
@@ -72,35 +72,36 @@ namespace PB.ITOps.Messaging.PatLite.Tools
         {
             ConfigureAuth(configCommand);
 
-            var azureSubscriptionId = await GetAzureSubscriptionFor(configCommand);
-            if (string.IsNullOrEmpty(azureSubscriptionId))
+            (var azureSubscriptionId, var resourceGroup) = await GetAzureSubscriptionFor(configCommand);
+            if (string.IsNullOrEmpty(azureSubscriptionId) || string.IsNullOrEmpty(resourceGroup))
             {
                 return -1;
             }
 
-            await _topicApiClient.DeleteTopic(configCommand, azureSubscriptionId);
+            await _topicApiClient.DeleteTopic(configCommand, azureSubscriptionId, resourceGroup);
 
             Console.WriteLine($"delete complete {configCommand.Namespace} {configCommand.EffectiveTopicName}\\{configCommand.Subscription}");
             return 0;
         }
 
-        private async Task<string> GetAzureSubscriptionFor(PatConfigCommand configCommand)
+        private async Task<(string subscriptionId, string resourceGroup)> GetAzureSubscriptionFor(PatConfigCommand configCommand)
         {
             var subscriptions = await _azureSubscriptionApiClient.GetSubscriptions();
             if (subscriptions.Any())
             {
                 foreach (var subscription in subscriptions)
                 {
-                    if (await _namespaceApiClient.NamespaceExistsIn(configCommand.Namespace, subscription))
+                    var resourceGroup = await _namespaceApiClient.GetResourceGroupFor(configCommand.Namespace, subscription);
+                    if (resourceGroup != null)
                     {
-                        return subscription;
+                        return (subscription, resourceGroup);
                     }
                 }
 
                 Console.Error.WriteError($"Error: Unable to find namespace {configCommand.Namespace} in any azure subscriptions");
             }
 
-            return string.Empty;
+            return (null, null);
         }
     }
 }
