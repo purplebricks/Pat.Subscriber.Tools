@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     public static class ConsoleWriter
     {

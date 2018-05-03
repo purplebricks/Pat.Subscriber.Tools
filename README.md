@@ -1,4 +1,4 @@
-# Pat.Lite.Tools
+# Pat.Subscriber.Tools
 
 This tool creates the subscriptions and topics required for a PatLite subscriber. The rules on the subscription are created by the subscriber at runtime.
 
@@ -8,7 +8,7 @@ To install the dotnet tooling into a project add the following to a projects `.c
 
 ```
 <ItemGroup>
-  <DotNetCliToolReference Include="PB.ITOps.Messaging.PatLite.Tools" Version="*" />
+  <DotNetCliToolReference Include="Pat.Subscriber.Tools" Version="*" />
 </ItemGroup>
 ```
 

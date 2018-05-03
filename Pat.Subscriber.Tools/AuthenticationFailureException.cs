@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     public class AuthenticationFailureException : Exception
     {

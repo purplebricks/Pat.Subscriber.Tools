@@ -8,7 +8,7 @@
     <PackageSuffix Condition=" '$(packageSuffix)' == '' "></PackageSuffix>
     <Version>1.0.$(BuildCounter)$(PackageSuffix)</Version>
     <PackageType>DotnetCliTool</PackageType>
-    <PackageId>PB.ITOps.Messaging.PatLite.Tools</PackageId>
+    <PackageId>Pat.Subscriber.Tools</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

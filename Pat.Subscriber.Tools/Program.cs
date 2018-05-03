@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.CommandLineUtils;
-using PB.ITOps.Messaging.PatLite.Tools.ApiClients;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
+using Pat.Subscriber.Tools.ApiClients;
+using Pat.Subscriber.Tools.Commands;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     internal static class Program
     {

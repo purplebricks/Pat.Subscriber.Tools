@@ -1,10 +1,10 @@
-﻿using PB.ITOps.Messaging.PatLite.Tools.ApiClients;
-using PB.ITOps.Messaging.PatLite.Tools.Commands;
+﻿using Pat.Subscriber.Tools.ApiClients;
+using Pat.Subscriber.Tools.Commands;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     public class PatBootstrapService
     {

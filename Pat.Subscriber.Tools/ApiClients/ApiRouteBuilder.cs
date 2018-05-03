@@ -1,5 +1,5 @@
 ﻿
-namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
+namespace Pat.Subscriber.Tools.ApiClients
 {
     public static class ApiRouteBuilder
     {
