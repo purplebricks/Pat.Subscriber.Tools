@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace PB.ITOps.Messaging.PatLite.Tools.Commands
+namespace Pat.Subscriber.Tools.Commands
 {
     public abstract class BaseCommand
     {

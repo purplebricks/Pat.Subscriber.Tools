@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/PB.ITOps.Messaging.PatLite.Tools/PB.ITOps.Messaging.PatLite.Tools.csproj"
+                "${workspaceFolder}/Pat.Subscriber.Tools/Pat.Subscriber.Tools.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

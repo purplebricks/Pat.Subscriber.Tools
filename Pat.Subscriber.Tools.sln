@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PB.ITOps.Messaging.PatLite.Tools", "PB.ITOps.Messaging.PatLite.Tools\PB.ITOps.Messaging.PatLite.Tools.csproj", "{DBD5A6FE-1303-4249-B238-575BB4EB8065}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pat.Subscriber.Tools", "Pat.Subscriber.Tools\Pat.Subscriber.Tools.csproj", "{DBD5A6FE-1303-4249-B238-575BB4EB8065}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

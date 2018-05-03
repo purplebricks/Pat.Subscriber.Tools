@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "PB.ITOps.Messaging.PatLite.Tools": {
+    "Pat.Subscriber.Tools": {
       "commandName": "Project",
       "commandLineArgs": "deleteSubscription -s PB.ITOPS.Email.ServiceTests-email -t pat -n pbqaservicebus"
     }

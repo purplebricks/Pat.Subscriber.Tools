@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     public class AdalLoggerCallback : IAdalLogCallback
     {

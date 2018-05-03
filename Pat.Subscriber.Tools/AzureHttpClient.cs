@@ -10,7 +10,7 @@ using System.Web;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
 
-namespace PB.ITOps.Messaging.PatLite.Tools
+namespace Pat.Subscriber.Tools
 {
     public class AzureHttpClient
     {

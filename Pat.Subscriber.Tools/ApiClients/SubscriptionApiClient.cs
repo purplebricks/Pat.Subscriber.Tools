@@ -1,8 +1,8 @@
-﻿using PB.ITOps.Messaging.PatLite.Tools.Commands;
+﻿using Pat.Subscriber.Tools.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
+namespace Pat.Subscriber.Tools.ApiClients
 {
     public class SubscriptionApiClient
     {

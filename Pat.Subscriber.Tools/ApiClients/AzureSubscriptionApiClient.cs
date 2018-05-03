@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
+namespace Pat.Subscriber.Tools.ApiClients
 {
     public class AzureSubscriptionApiClient
     {

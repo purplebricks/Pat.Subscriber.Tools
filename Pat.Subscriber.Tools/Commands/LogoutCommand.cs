@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
 
-namespace PB.ITOps.Messaging.PatLite.Tools.Commands
+namespace Pat.Subscriber.Tools.Commands
 {
     public class LogoutCommand
     {

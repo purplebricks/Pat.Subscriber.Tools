@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PB.ITOps.Messaging.PatLite.Tools.ApiClients
+namespace Pat.Subscriber.Tools.ApiClients
 {
     public class NamespaceApiClient
     {
