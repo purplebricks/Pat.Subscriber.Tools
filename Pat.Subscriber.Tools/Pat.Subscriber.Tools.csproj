@@ -9,6 +9,13 @@
     <Version>1.0.$(BuildCounter)$(PackageSuffix)</Version>
     <PackageType>DotnetCliTool</PackageType>
     <PackageId>Pat.Subscriber.Tools</PackageId>
+    <Summary>Purplebricks support tools for Pat.Subscriber</Summary>
+    <Description>Purplebricks support tools for Pat.Subscriber</Description>
+    <PackageIconUrl>https://pbonlineassets.azureedge.net/web-images/favicons/favicon-96x96.png</PackageIconUrl>
+    <PackageProjectUrl>http://purplebricks.io/pat/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/purplebricks/Pat.Subscriber.Tools/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/purplebricks/Pat.Subscriber.Tools</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
