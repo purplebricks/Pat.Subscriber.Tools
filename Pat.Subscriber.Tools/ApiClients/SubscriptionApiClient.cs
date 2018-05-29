@@ -25,19 +25,30 @@ namespace Pat.Subscriber.Tools.ApiClients
                 }
             };
 
-            var path = BuildPath(configCommand, azureSubscriptionId, resouceGroupName);
+            var path = BuildSubscriptionPath(configCommand, azureSubscriptionId, resouceGroupName);
             await _azureHttpClient.Put(new Uri(path, UriKind.Relative), payload);
+        }
+
+        public async Task RemoveDefaultFilter(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
+        {
+            var path = BuildRulePath(configCommand, azureSubscriptionId, resouceGroupName, "%24Default");
+            await _azureHttpClient.Delete(new Uri(path, UriKind.Relative));
         }
 
         public async Task DeleteSubscription(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
         {
-            var path = BuildPath(configCommand, azureSubscriptionId, resouceGroupName);
+            var path = BuildSubscriptionPath(configCommand, azureSubscriptionId, resouceGroupName);
             await _azureHttpClient.Delete(new Uri(path, UriKind.Relative));
         }
 
-        private static string BuildPath(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
+        private static string BuildSubscriptionPath(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
         {
             return ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName, configCommand.Subscription);
+        }
+
+        private static string BuildRulePath(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName, string ruleName)
+        {
+            return ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName, configCommand.Subscription, ruleName);
         }
     }
 }
