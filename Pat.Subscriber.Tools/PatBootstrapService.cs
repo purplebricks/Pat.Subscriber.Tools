@@ -41,6 +41,7 @@ namespace Pat.Subscriber.Tools
             await _topicApiClient.CreateTopic(configCommand, azureSubscriptionId, resourceGroup);
 
             await _subscriptionApiClient.CreateSubscription(configCommand, azureSubscriptionId, resourceGroup);
+            await _subscriptionApiClient.RemoveDefaultFilter(configCommand, azureSubscriptionId, resourceGroup);
 
             Console.WriteLine($"create complete {configCommand.Namespace} {configCommand.EffectiveTopicName}\\{configCommand.Subscription}");
 

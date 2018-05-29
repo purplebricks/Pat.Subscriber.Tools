@@ -11,5 +11,8 @@ namespace Pat.Subscriber.Tools.ApiClients
 
         public static string Build(string subscriptionId, string resourceGroup, string @namespace, string topic, string subscription) 
             => $"{Build(subscriptionId, resourceGroup, @namespace, topic)}/subscriptions/{subscription}";
+
+        public static string Build(string subscriptionId, string resourceGroup, string @namespace, string topic, string subscription, string ruleName)
+            => $"{Build(subscriptionId, resourceGroup, @namespace, topic, subscription)}/rules/{ruleName}";
     }
 }
