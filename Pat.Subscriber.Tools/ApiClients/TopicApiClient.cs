@@ -14,9 +14,9 @@ namespace Pat.Subscriber.Tools.ApiClients
             _azureHttpClient = azureHttpClient;
         }
 
-        public async Task CreateTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
+        public async Task CreateTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resourceGroupName)
         {
-            if (await TopicExists(configCommand, resouceGroupName, azureSubscriptionId))
+            if (await TopicExists(configCommand, resourceGroupName, azureSubscriptionId))
             {
                 return;
             }
@@ -25,29 +25,29 @@ namespace Pat.Subscriber.Tools.ApiClients
             {
                 properties = new
                 {
-                    enablePartitioning = true,
-                    maxSizeInMegabytes = 1024
+                    enablePartitioning = configCommand.EnablePartitioning,
+                    maxSizeInMegabytes = configCommand.MaxSizeInMegabytes
                 }
             };
 
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resourceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             await _azureHttpClient.Put(new Uri(path, UriKind.Relative), payload);
         }
 
-        public async Task DeleteTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
+        public async Task DeleteTopic(PatConfigCommand configCommand, string azureSubscriptionId, string resourceGroupName)
         {
-            if (!await TopicExists(configCommand, azureSubscriptionId, resouceGroupName))
+            if (!await TopicExists(configCommand, azureSubscriptionId, resourceGroupName))
             {
                 return;
             }
 
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resourceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             await _azureHttpClient.Delete(new Uri(path, UriKind.Relative));
         }
 
-        private async Task<bool> TopicExists(PatConfigCommand configCommand, string azureSubscriptionId, string resouceGroupName)
+        private async Task<bool> TopicExists(PatConfigCommand configCommand, string azureSubscriptionId, string resourceGroupName)
         {
-            var path = ApiRouteBuilder.Build(azureSubscriptionId, resouceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
+            var path = ApiRouteBuilder.Build(azureSubscriptionId, resourceGroupName, configCommand.Namespace, configCommand.EffectiveTopicName);
             var result = await _azureHttpClient.GetStatusCode(new Uri(path, UriKind.Relative));
 
             if (result == HttpStatusCode.OK)

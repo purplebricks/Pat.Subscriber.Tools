@@ -8,14 +8,6 @@ namespace Pat.Subscriber.Tools.Commands
     {
         private readonly string _command;
         private readonly string _description;
-        private CommandOption _connectionString;
-        private CommandOption _namespace;
-        private CommandOption _subscriptionSetting;
-        private CommandOption _topicSetting;
-        private CommandOption _devSetting;
-        private CommandOption _clientId;
-        private CommandOption _clientSecret;
-        private CommandOption _tenantId;
         private CommandParser _commandParser;
 
         protected BaseCommand(string command, string description)
@@ -26,16 +18,27 @@ namespace Pat.Subscriber.Tools.Commands
 
         public void Register(CommandLineApplication app)
         {
-            _connectionString = app.Option("-c|--connectionString", "servicebus connection string", CommandOptionType.SingleValue);
-            _namespace = app.Option("-n|--namespace", "servicebus namespace", CommandOptionType.SingleValue);
-            _subscriptionSetting = app.Option("-s|--subscription", "servicebus subscription name", CommandOptionType.SingleValue);
-            _topicSetting = app.Option("-t|--topic", "servicebus topic name", CommandOptionType.SingleValue);
-            _devSetting = app.Option("-d|--dev", "use local dev topic (defaults to false)", CommandOptionType.NoValue);
-            _clientId = app.Option("-ci|--clientId", "Client Id, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
-            _clientSecret = app.Option("-cs|--clientSecret", "Client secret, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
-            _tenantId = app.Option("-ti|--tenantId", "Tenant Id (optional).", CommandOptionType.SingleValue);
+            var connectionString = app.Option("-c|--connectionString", "servicebus connection string", CommandOptionType.SingleValue);
+            var @namespace = app.Option("-n|--namespace", "servicebus namespace", CommandOptionType.SingleValue);
+            var subscriptionSetting = app.Option("-s|--subscription", "servicebus subscription name", CommandOptionType.SingleValue);
+            var topicSetting = app.Option("-t|--topic", "servicebus topic name", CommandOptionType.SingleValue);
+            var partitionSetting = app.Option("-tp|--enablepartitioning", "use topic partitioning dev topic (defaults to false)", CommandOptionType.NoValue);
+            var maxTopicSizeSetting = app.Option("-ts|--maxtopicsize", "maximum topic size in MB (defaults to 1024)", CommandOptionType.SingleValue);
+            var devSetting = app.Option("-d|--dev", "use local dev topic (defaults to false)", CommandOptionType.NoValue);
+            var clientId = app.Option("-ci|--clientId", "Client Id, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
+            var clientSecret = app.Option("-cs|--clientSecret", "Client secret, used used for service principal authentication (optional).", CommandOptionType.SingleValue);
+            var tenantId = app.Option("-ti|--tenantId", "Tenant Id (optional).", CommandOptionType.SingleValue);
 
-            _commandParser = new CommandParser(_connectionString, _namespace, _subscriptionSetting, _topicSetting, _devSetting, _clientId, _clientSecret, _tenantId);
+            _commandParser = new CommandParser(connectionString, 
+                                                @namespace, 
+                                                subscriptionSetting,
+                                                topicSetting, 
+                                                devSetting, 
+                                                clientId, 
+                                                clientSecret, 
+                                                tenantId, 
+                                                partitionSetting,
+                                                maxTopicSizeSetting);
 
             app.Description = _description;
 

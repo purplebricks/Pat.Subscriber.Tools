@@ -17,9 +17,11 @@ namespace Pat.Subscriber.Tools.Commands
         private readonly CommandOption _clientId;
         private readonly CommandOption _clientSecret;
         private readonly CommandOption _tenantId;
+        private readonly CommandOption _partitioning;
+        private readonly CommandOption _maxTopicSize;
         private static readonly Regex ServiceBusEntityName = new Regex(@"^[\w-\.\$]{1,50}/?$", RegexOptions.Compiled | RegexOptions.ECMAScript);
 
-        public CommandParser(CommandOption connectionString, CommandOption ns, CommandOption subscriptionSetting, CommandOption topicSetting, CommandOption devSetting, CommandOption clientId, CommandOption clientSecret, CommandOption tenantId)
+        public CommandParser(CommandOption connectionString, CommandOption ns, CommandOption subscriptionSetting, CommandOption topicSetting, CommandOption devSetting, CommandOption clientId, CommandOption clientSecret, CommandOption tenantId, CommandOption partitioning, CommandOption maxTopicSize)
         {
             _connectionString = connectionString;
             _namespace = ns;
@@ -29,14 +31,16 @@ namespace Pat.Subscriber.Tools.Commands
             _clientId = clientId;
             _clientSecret = clientSecret;
             _tenantId = tenantId;
+            _partitioning = partitioning;
+            _maxTopicSize = maxTopicSize;
         }
 
         public PatConfigCommand GetConfig()
         {
-            var commandValidationFailues = GetValidationErrors();
-            if (commandValidationFailues.Any())
+            var commandValidationFailures = GetValidationErrors();
+            if (commandValidationFailures.Any())
             {
-                foreach (var failure in commandValidationFailues)
+                foreach (var failure in commandValidationFailures)
                 {
                     Console.Error.WriteError($"Error: {failure}");
                 }
@@ -52,7 +56,9 @@ namespace Pat.Subscriber.Tools.Commands
                 UseDevelopmentTopic = _devSetting.HasValue(),
                 ClientId = GetAuthentication().ClientId,
                 ClientSecret = GetAuthentication().ClientSecret,
-                TenantId = GetAuthentication().TenantId
+                TenantId = GetAuthentication().TenantId,
+                EnablePartitioning = _partitioning.HasValue(),
+                MaxSizeInMegabytes = GetMaxSizeInMegabytes().MaxSizeInMegabytes
             };
         }
 
@@ -82,6 +88,12 @@ namespace Pat.Subscriber.Tools.Commands
             if (!string.IsNullOrEmpty(topic.Error))
             {
                 errors.Add(topic.Error);
+            }
+
+            var maxSize = GetMaxSizeInMegabytes();
+            if (!string.IsNullOrEmpty(maxSize.Error))
+            {
+                errors.Add(maxSize.Error);
             }
 
             return errors;
@@ -131,7 +143,27 @@ namespace Pat.Subscriber.Tools.Commands
             return GetEntity(_topicSetting);
         }
 
-        private static (string Error, string Subscription) GetEntity(CommandOption commandOption)
+        private (string Error, int MaxSizeInMegabytes) GetMaxSizeInMegabytes()
+        {
+            var result = GetEntity(_maxTopicSize);
+            if(result.CommandValue == null)
+            {
+                return (null, 1024);
+            }
+            if(string.IsNullOrEmpty(result.Error))
+            {
+                if(int.TryParse(result.CommandValue, out int size))
+                {
+                    return (null, size);
+                }
+                return ("MaxSizeInMegabytes must be an integer value", 0);
+
+            }
+
+            return (result.Error, 0);
+        }
+
+        private static (string Error, string CommandValue) GetEntity(CommandOption commandOption)
         {
             if (!commandOption.HasValue())
             {

@@ -12,5 +12,7 @@ namespace Pat.Subscriber.Tools.Commands
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string TenantId { get; set; }
+        public bool EnablePartitioning { get; set; }
+        public int MaxSizeInMegabytes { get; set; }
     }
 }

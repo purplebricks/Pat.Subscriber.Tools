@@ -35,6 +35,7 @@ namespace Pat.Subscriber.Tools
             }
             catch (CommandParsingException commandParsingException)
             {
+                Console.WriteLine(commandParsingException.Message);
                 commandParsingException.Command.ShowHelp();
                 return -1;
             }
