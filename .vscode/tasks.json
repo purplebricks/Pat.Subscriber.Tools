@@ -9,7 +9,11 @@
                 "build",
                 "${workspaceFolder}/Pat.Subscriber.Tools/Pat.Subscriber.Tools.csproj"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
