@@ -54,7 +54,11 @@ namespace Pat.Subscriber.Tools
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
             
             var result = await _client.PutAsync(BuildManagementUri(uri), content);
-            result.EnsureSuccessStatusCode();
+
+            if (!result.IsSuccessStatusCode)
+            {
+                await ThrowFailureExceptionFor(result);
+            }
         }
 
         public async Task Delete(Uri uri)
@@ -62,14 +66,21 @@ namespace Pat.Subscriber.Tools
             await EnsureAuthTokenValid();
 
             var result = await _client.DeleteAsync(BuildManagementUri(uri));
-            result.EnsureSuccessStatusCode();
+
+            if (!result.IsSuccessStatusCode)
+            {
+                await ThrowFailureExceptionFor(result);
+            }
         }
 
         public async Task<(T ResponsePayload, HttpStatusCode Status)> Get<T>(Uri path, T responseTemplate)
         {
             var result = await Get(path);
 
-            result.EnsureSuccessStatusCode();
+            if (!result.IsSuccessStatusCode)
+            {
+                await ThrowFailureExceptionFor(result);
+            }
 
             var responsePayload = await result.Content.ReadAsStringAsync();
 
@@ -102,6 +113,23 @@ namespace Pat.Subscriber.Tools
             };
 
             return builder.Uri;
+        }
+
+        private static async Task ThrowFailureExceptionFor(HttpResponseMessage result)
+        {
+            string resultBody;
+
+            try
+            {
+                resultBody = await result.Content.ReadAsStringAsync();
+            }
+            catch (Exception exception)
+            {
+                resultBody = $"<Exception reading body: {exception.Message}>";
+            }
+
+            var message = $"Received response code {result.StatusCode} ({result.ReasonPhrase}). Body was: {resultBody}";
+            throw new InvalidOperationException(message);
         }
 
         public string AuthUser
