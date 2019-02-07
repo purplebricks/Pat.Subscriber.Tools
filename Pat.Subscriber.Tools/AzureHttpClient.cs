@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
+using Polly;
 
 namespace Pat.Subscriber.Tools
 {
@@ -53,7 +54,7 @@ namespace Pat.Subscriber.Tools
 
             var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
             
-            var result = await _client.PutAsync(BuildManagementUri(uri), content);
+            var result = await RetryHonouringRetryAfter.ExecuteAsync(() => _client.PutAsync(BuildManagementUri(uri), content));
 
             if (!result.IsSuccessStatusCode)
             {
@@ -65,7 +66,7 @@ namespace Pat.Subscriber.Tools
         {
             await EnsureAuthTokenValid();
 
-            var result = await _client.DeleteAsync(BuildManagementUri(uri));
+            var result = await RetryHonouringRetryAfter.ExecuteAsync(() => _client.DeleteAsync(BuildManagementUri(uri)));
 
             if (!result.IsSuccessStatusCode)
             {
@@ -91,7 +92,8 @@ namespace Pat.Subscriber.Tools
         {
             await EnsureAuthTokenValid();
 
-            var result = await _client.GetAsync(BuildManagementUri(uri));
+            var result = await RetryHonouringRetryAfter.ExecuteAsync(() => _client.GetAsync(BuildManagementUri(uri)));
+
             return result;
         }
 
@@ -205,6 +207,33 @@ namespace Pat.Subscriber.Tools
             _clientId = configCommandClientId;
             _clientSecret = configCommandClientSecret;
             _tenantId = tenantId;
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> RetryHonouringRetryAfter
+        {
+            get
+            {
+                return Policy.Handle<HttpRequestException>()
+                    .OrResult<HttpResponseMessage>(r => r.StatusCode == (HttpStatusCode) 429)
+                    .WaitAndRetryAsync(
+                        retryCount: 3,
+                        sleepDurationProvider: (retryCount, response, context) =>
+                        {
+                            var retryDurationHeaderValue =
+                                response.Result?.Headers.GetValues("Retry-After")?.FirstOrDefault();
+                            return int.TryParse(retryDurationHeaderValue, out int retryDuration)
+                                ? TimeSpan.FromSeconds(retryDuration)
+                                : TimeSpan.FromSeconds(60);
+                        },
+
+                        onRetryAsync: (response, timespan, retryCount, context) =>
+                        {
+                            Console.WriteLine(
+                                $"Retrying request to {response.Result.RequestMessage.RequestUri}, attempt {retryCount}");
+                            return Task.CompletedTask;
+                        }
+                    );
+            }
         }
     }
 }
